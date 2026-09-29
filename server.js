@@ -101,22 +101,31 @@ function customer(req){
 }
 
 app.post("/api/customer/signup",async(req,res)=>{
-  const {name,phone,password}=req.body;
+  const {name,phone,password,address}=req.body;
   if(!name||!phone||!password)return res.status(400).json({error:"Name, mobile and password required"});
   const p=String(phone).replace(/\D/g,"");
   if(p.length<10)return res.status(400).json({error:"Enter valid mobile number"});
   if(db.customers.some(c=>c.phone===p))return res.status(409).json({error:"Mobile number already registered"});
-  const c={id:Date.now(),name:String(name).trim(),phone:p,password:String(password),token:require("crypto").randomBytes(24).toString("hex")};
+  const c={id:Date.now(),name:String(name).trim(),phone:p,password:String(password),address:String(address||"").trim(),token:require("crypto").randomBytes(24).toString("hex")};
   db.customers.push(c);
   await save();
-  res.json({id:c.id,name:c.name,phone:c.phone,token:c.token});
+  res.json({id:c.id,name:c.name,phone:c.phone,address:c.address||"",token:c.token});
 });
 
 app.post("/api/customer/login",async(req,res)=>{
   const p=String(req.body.phone||"").replace(/\D/g,"");
   const c=db.customers.find(x=>x.phone===p&&x.password===String(req.body.password||""));
   if(!c)return res.status(401).json({error:"Invalid mobile or password"});
-  res.json({id:c.id,name:c.name,phone:c.phone,token:c.token});
+  res.json({id:c.id,name:c.name,phone:c.phone,address:c.address||"",token:c.token});
+});
+
+app.put("/api/customer/profile",async(req,res)=>{
+  const c=customer(req);
+  if(!c)return res.status(401).json({error:"Customer login required"});
+  if(typeof req.body.name==="string"&&req.body.name.trim())c.name=req.body.name.trim();
+  if(typeof req.body.address==="string")c.address=req.body.address.trim();
+  await save();
+  res.json({id:c.id,name:c.name,phone:c.phone,address:c.address||"",token:c.token});
 });
 
 app.get("/api/customer/orders",async(req,res)=>{
