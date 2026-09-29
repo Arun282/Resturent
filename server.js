@@ -117,6 +117,15 @@ app.get("/api/orders",(req,res)=>{
   res.json(db.orders);
 });
 
+app.delete("/api/orders/:id",async(req,res)=>{
+  if(!admin(req))return res.status(401).json({error:"Unauthorized"});
+  const before=db.orders.length;
+  db.orders=db.orders.filter(x=>String(x.id)!==String(req.params.id));
+  if(db.orders.length===before)return res.status(404).json({error:"Order not found"});
+  await save();
+  res.json({ok:true});
+});
+
 app.patch("/api/orders/:id/status",async(req,res)=>{
   if(!admin(req))return res.status(401).json({error:"Unauthorized"});
   const o=db.orders.find(x=>String(x.id)===String(req.params.id));
