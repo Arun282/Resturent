@@ -6,10 +6,11 @@ const app=express();
 const PORT=process.env.PORT||10000;
 const DATA=path.join(__dirname,"data.json");
 const ADMIN_USER=process.env.ADMIN_USER||"aroh097";
-const ADMIN_PASS=process.env.ADMIN_PASS||"";
+const ADMIN_PASS=process.env.ADMIN_PASS||"Arun@123";
 app.use(cors());
 app.use(express.json({limit:"8mb"}));
-const defaultMenu=[{id:1,name:"Butter Chicken",price:260,img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80"},{id:2,name:"Paneer Tikka",price:220,img:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=80"},{id:3,name:"Veg Biryani",price:180,img:"https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=800&q=80"},{id:4,name:"Masala Dosa",price:140,img:"https://images.unsplash.com/photo-1630383249896-424e482df921?auto=format&fit=crop&w=800&q=80"}];\nlet db={menu:defaultMenu,orders:[],settings:{name:"My Restaurant"}};
+const defaultMenu=[{id:1,name:"Butter Chicken",price:260,img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80"},{id:2,name:"Paneer Tikka",price:220,img:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=80"},{id:3,name:"Veg Biryani",price:180,img:"https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=800&q=80"},{id:4,name:"Masala Dosa",price:140,img:"https://images.unsplash.com/photo-1630383249896-424e482df921?auto=format&fit=crop&w=800&q=80"}];
+let db={menu:defaultMenu,orders:[],settings:{name:"My Restaurant"}};
 try{if(fs.existsSync(DATA))db=JSON.parse(fs.readFileSync(DATA,"utf8"))}catch(e){}
 function save(){fs.writeFileSync(DATA,JSON.stringify(db))}
 function admin(req){return req.headers["x-admin-user"]===ADMIN_USER&&req.headers["x-admin-pass"]===ADMIN_PASS}
