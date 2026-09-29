@@ -1,4 +1,4 @@
-const API="https://resturent-app-jxds.onrender.com/api";
+const API="https://resturent-backend-live.onrender.com/api";
 const foodGallery=[
 ["Butter Chicken","https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80"],
 ["Paneer Tikka","https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=80"],
