@@ -27,7 +27,7 @@ const defaultMenu=[
 {id:4,name:"Masala Dosa",price:140,img:"https://images.unsplash.com/photo-1630383249896-424e482df921?auto=format&fit=crop&w=800&q=80"}
 ];
 
-let db={menu:defaultMenu,orders:[],settings:{name:"My Restaurant",logo:""}};
+let db={menu:defaultMenu,orders:[],customers:[],settings:{name:"My Restaurant",logo:""}};
 let dataSha=null;
 let saveQueue=Promise.resolve();
 
@@ -35,6 +35,7 @@ function normalize(){
   db=db&&typeof db==="object"?db:{};
   db.menu=Array.isArray(db.menu)?db.menu:defaultMenu;
   db.orders=Array.isArray(db.orders)?db.orders:[];
+  db.customers=Array.isArray(db.customers)?db.customers:[];
   db.settings={name:db.settings?.name||"My Restaurant",logo:db.settings?.logo||""};
 }
 
@@ -94,6 +95,36 @@ function admin(req){
   return req.headers["x-admin-user"]===ADMIN_USER&&req.headers["x-admin-pass"]===ADMIN_PASS;
 }
 
+function customer(req){
+  const token=req.headers["x-customer-token"];
+  return db.customers.find(c=>c.token===token);
+}
+
+app.post("/api/customer/signup",async(req,res)=>{
+  const {name,phone,password}=req.body;
+  if(!name||!phone||!password)return res.status(400).json({error:"Name, mobile and password required"});
+  const p=String(phone).replace(/\D/g,"");
+  if(p.length<10)return res.status(400).json({error:"Enter valid mobile number"});
+  if(db.customers.some(c=>c.phone===p))return res.status(409).json({error:"Mobile number already registered"});
+  const c={id:Date.now(),name:String(name).trim(),phone:p,password:String(password),token:require("crypto").randomBytes(24).toString("hex")};
+  db.customers.push(c);
+  await save();
+  res.json({id:c.id,name:c.name,phone:c.phone,token:c.token});
+});
+
+app.post("/api/customer/login",async(req,res)=>{
+  const p=String(req.body.phone||"").replace(/\D/g,"");
+  const c=db.customers.find(x=>x.phone===p&&x.password===String(req.body.password||""));
+  if(!c)return res.status(401).json({error:"Invalid mobile or password"});
+  res.json({id:c.id,name:c.name,phone:c.phone,token:c.token});
+});
+
+app.get("/api/customer/orders",async(req,res)=>{
+  const c=customer(req);
+  if(!c)return res.status(401).json({error:"Customer login required"});
+  res.json(db.orders.filter(o=>String(o.phone).replace(/\D/g,"")===c.phone));
+});
+
 app.get("/api/menu",(req,res)=>res.json(db.menu));
 app.get("/api/settings",(req,res)=>res.json(db.settings));
 
@@ -104,7 +135,9 @@ app.get("/api/orders/:id",(req,res)=>{
 });
 
 app.post("/api/orders",async(req,res)=>{
+  const c=customer(req);
   const {name,phone,address,items,total}=req.body;
+  if(!c)return res.status(401).json({error:"Customer login required"});
   if(!name||!phone||!address||!Array.isArray(items)||!items.length)return res.status(400).json({error:"Missing order details"});
   const o={id:Date.now(),name,phone,address,items,total:Number(total)||0,status:"New",date:new Date().toLocaleString("en-IN")};
   db.orders.unshift(o);
