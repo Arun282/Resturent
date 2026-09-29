@@ -104,7 +104,7 @@ app.post("/api/customer/signup",async(req,res)=>{
   const {name,phone,password,address}=req.body;
   if(!name||!phone||!password)return res.status(400).json({error:"Name, mobile and password required"});
   const p=String(phone).replace(/\D/g,"");
-  if(p.length<10)return res.status(400).json({error:"Enter valid mobile number"});
+  if(p.length!==10)return res.status(400).json({error:"Mobile number must be exactly 10 digits"});
   if(db.customers.some(c=>c.phone===p))return res.status(409).json({error:"Mobile number already registered"});
   const c={id:Date.now(),name:String(name).trim(),phone:p,password:String(password),address:String(address||"").trim(),token:require("crypto").randomBytes(24).toString("hex")};
   db.customers.push(c);
@@ -114,6 +114,7 @@ app.post("/api/customer/signup",async(req,res)=>{
 
 app.post("/api/customer/login",async(req,res)=>{
   const p=String(req.body.phone||"").replace(/\D/g,"");
+  if(p.length!==10)return res.status(400).json({error:"Mobile number must be exactly 10 digits"});
   const c=db.customers.find(x=>x.phone===p&&x.password===String(req.body.password||""));
   if(!c)return res.status(401).json({error:"Invalid mobile or password"});
   res.json({id:c.id,name:c.name,phone:c.phone,address:c.address||"",token:c.token});
