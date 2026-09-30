@@ -1,0 +1,10 @@
+{
+  "admins": [
+    {
+      "id": 1,
+      "user": "aroh097",
+      "pass": "Arun@123",
+      "recoveryPin": "1234"
+    }
+  ]
+}
