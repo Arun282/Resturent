@@ -19,7 +19,37 @@
       "img": "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=800&q=80"
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "id": 1790759274483,
+      "name": "Arun Rohilla Goad",
+      "phone": "9306493361",
+      "address": "Goad",
+      "items": [
+        {
+          "name": "Chaumin",
+          "price": 60,
+          "qty": 2
+        },
+        {
+          "name": "Simple Samosa",
+          "price": 20,
+          "qty": 2
+        },
+        {
+          "name": "Momos",
+          "price": 50,
+          "qty": 1
+        }
+      ],
+      "total": 189,
+      "subtotal": 189,
+      "coupon": "WELCOME10",
+      "discount": 21,
+      "status": "New",
+      "date": "30/9/2026, 9:07:54 am"
+    }
+  ],
   "settings": {
     "name": "My Restaurant",
     "logo": ""
