@@ -14,7 +14,17 @@
     }
   ],
   "orders": [],
-  "customers": [],
+  "customers": [
+    {
+      "id": 1790760520190,
+      "name": "Arun Rohilla Goad",
+      "phone": "9306493361",
+      "password": "Arun",
+      "address": "Goad",
+      "recoveryPin": "123",
+      "token": "5bb0aaba9157d36d0e1f1cda072d118e941e42b3c13d8628"
+    }
+  ],
   "coupons": [
     {
       "id": 1790760357158,
