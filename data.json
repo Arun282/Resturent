@@ -24,7 +24,17 @@
     "name": "My Restaurant",
     "logo": ""
   },
-  "customers": [],
+  "customers": [
+    {
+      "id": 1790759226884,
+      "name": "Arun Rohilla Goad",
+      "phone": "9306493361",
+      "password": "Arun",
+      "address": "Goad",
+      "recoveryPin": "123",
+      "token": "ed0fc086b0698e2922cfdbacbb4c28541618d18000206945"
+    }
+  ],
   "coupons": [
     {
       "id": 1790759182384,
