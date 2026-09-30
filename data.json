@@ -25,7 +25,16 @@
     "logo": ""
   },
   "customers": [],
-  "coupons": [],
+  "coupons": [
+    {
+      "id": 1790759182384,
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "minOrder": 199,
+      "active": true
+    }
+  ],
   "ads": [
     {
       "id": 1790759162433,
